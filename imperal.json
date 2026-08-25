@@ -1,0 +1,2295 @@
+{
+  "manifest_schema_version": 3,
+  "sdk_version": "5.11.0",
+  "app_id": "metricstream-connector",
+  "version": "0.1.0",
+  "name": "MetricStream",
+  "description": "Connect your own MetricStream tenant (static API Key) to browse the Risk register, review and manage Issues, check Controls testing status and Assessments, and get an aggregated risk-posture report.",
+  "icon": "icon.svg",
+  "actions_explicit": true,
+  "system": false,
+  "capabilities": [
+    "metricstream:read",
+    "metricstream:write"
+  ],
+  "tools": [
+    {
+      "name": "connect_metricstream",
+      "description": "Connect a MetricStream tenant via a static API Key, after verifying connectivity.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "metricstream.provider.connected"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "label": {
+            "default": "",
+            "description": "Friendly tenant label, e.g. 'Acme Corp — Risk & Compliance'.",
+            "title": "Label",
+            "type": "string"
+          },
+          "api_key": {
+            "description": "MetricStream API Key, from MetricStream Admin.",
+            "title": "Api Key",
+            "type": "string"
+          },
+          "base_url": {
+            "description": "Your MetricStream instance URL, e.g. https://your-instance.metricstream.com.",
+            "title": "Base Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "api_key",
+          "base_url"
+        ],
+        "title": "ConnectMetricStreamParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "connection_id": {
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "base_url": {
+            "title": "Base Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "connection_id",
+          "label",
+          "base_url"
+        ],
+        "title": "MetricStreamConnection",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "metricstream-connector.connect_metricstream",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "metricstream"
+    },
+    {
+      "name": "disconnect_metricstream",
+      "description": "Disconnect a MetricStream tenant: deletes only the saved credentials. Nothing in MetricStream itself is changed.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "metricstream.provider.disconnected"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "description": "Saved MetricStream tenant connection ID to remove from Imperal.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "connection_id"
+        ],
+        "title": "DisconnectMetricStreamParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "deleted": {
+            "title": "Deleted",
+            "type": "boolean"
+          },
+          "connection_id": {
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "deleted",
+          "connection_id"
+        ],
+        "title": "DeleteResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "metricstream-connector.disconnect_metricstream",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "metricstream"
+    },
+    {
+      "name": "list_connections",
+      "description": "List the connected MetricStream tenants.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {},
+        "title": "NoParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "MetricStreamConnection": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "connection_id": {
+                "title": "Connection Id",
+                "type": "string"
+              },
+              "label": {
+                "title": "Label",
+                "type": "string"
+              },
+              "base_url": {
+                "title": "Base Url",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "connection_id",
+              "label",
+              "base_url"
+            ],
+            "title": "MetricStreamConnection",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "connections": {
+            "items": {
+              "$ref": "#/$defs/MetricStreamConnection"
+            },
+            "title": "Connections",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "connections"
+        ],
+        "title": "ConnectionList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "metricstream-connector.list_connections",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "metricstream"
+    },
+    {
+      "name": "list_risks",
+      "description": "List Risks in the GRC Risk Register on the connected MetricStream tenant.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved MetricStream tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "title": "ListRisksParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "MetricStreamRisk": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "risk_id": {
+                "title": "Risk Id",
+                "type": "string"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "risk_level": {
+                "default": "",
+                "title": "Risk Level",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "risk_id",
+              "name"
+            ],
+            "title": "MetricStreamRisk",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "risks": {
+            "items": {
+              "$ref": "#/$defs/MetricStreamRisk"
+            },
+            "title": "Risks",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "risks"
+        ],
+        "title": "RiskList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "metricstream-connector.list_risks",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "metricstream"
+    },
+    {
+      "name": "get_risk",
+      "description": "Read one Risk in full by id.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved MetricStream tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "risk_id": {
+            "description": "MetricStream Risk ID.",
+            "title": "Risk Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "risk_id"
+        ],
+        "title": "RiskIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "risk_id": {
+            "title": "Risk Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "risk_level": {
+            "default": "",
+            "title": "Risk Level",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "risk_id",
+          "name"
+        ],
+        "title": "MetricStreamRisk",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "metricstream-connector.get_risk",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "metricstream"
+    },
+    {
+      "name": "list_issues",
+      "description": "List Issues raised against Risks, optionally filtered to one Risk.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved MetricStream tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "risk_id": {
+            "default": "",
+            "description": "Optional MetricStream Risk ID to filter Issues to.",
+            "title": "Risk Id",
+            "type": "string"
+          }
+        },
+        "title": "ListIssuesParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "MetricStreamIssue": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "default": "",
+                "title": "Status",
+                "type": "string"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "issue_id": {
+                "title": "Issue Id",
+                "type": "string"
+              },
+              "severity": {
+                "default": "",
+                "title": "Severity",
+                "type": "string"
+              },
+              "risk_id": {
+                "default": "",
+                "title": "Risk Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "issue_id"
+            ],
+            "title": "MetricStreamIssue",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/$defs/MetricStreamIssue"
+            },
+            "title": "Issues",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "issues"
+        ],
+        "title": "IssueList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "metricstream-connector.list_issues",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "metricstream"
+    },
+    {
+      "name": "get_issue",
+      "description": "Read one Issue in full by id.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved MetricStream tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "issue_id": {
+            "description": "MetricStream Issue ID.",
+            "title": "Issue Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "issue_id"
+        ],
+        "title": "IssueIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "default": "",
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "issue_id": {
+            "title": "Issue Id",
+            "type": "string"
+          },
+          "severity": {
+            "default": "",
+            "title": "Severity",
+            "type": "string"
+          },
+          "risk_id": {
+            "default": "",
+            "title": "Risk Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "issue_id"
+        ],
+        "title": "MetricStreamIssue",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "metricstream-connector.get_issue",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "metricstream"
+    },
+    {
+      "name": "create_issue",
+      "description": "Create a new Issue, optionally linked to a Risk.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "metricstream.issue.created"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved MetricStream tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "title": {
+            "description": "Issue title.",
+            "title": "Title",
+            "type": "string"
+          },
+          "description": {
+            "default": "",
+            "description": "Issue description.",
+            "title": "Description",
+            "type": "string"
+          },
+          "severity": {
+            "default": "",
+            "description": "Issue severity, e.g. LOW, MEDIUM, HIGH, CRITICAL.",
+            "title": "Severity",
+            "type": "string"
+          },
+          "risk_id": {
+            "default": "",
+            "description": "Optional MetricStream Risk ID this Issue relates to.",
+            "title": "Risk Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ],
+        "title": "CreateIssueParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "default": "",
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "issue_id": {
+            "title": "Issue Id",
+            "type": "string"
+          },
+          "severity": {
+            "default": "",
+            "title": "Severity",
+            "type": "string"
+          },
+          "risk_id": {
+            "default": "",
+            "title": "Risk Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "issue_id"
+        ],
+        "title": "MetricStreamIssue",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "metricstream-connector.create_issue",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "metricstream"
+    },
+    {
+      "name": "update_issue",
+      "description": "Update selected fields of an existing Issue (status and/or severity). Only given fields change.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "metricstream.issue.updated"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved MetricStream tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "issue_id": {
+            "description": "MetricStream Issue ID to update.",
+            "title": "Issue Id",
+            "type": "string"
+          },
+          "status": {
+            "default": "",
+            "description": "New status for the Issue.",
+            "title": "Status",
+            "type": "string"
+          },
+          "severity": {
+            "default": "",
+            "description": "New severity for the Issue.",
+            "title": "Severity",
+            "type": "string"
+          }
+        },
+        "required": [
+          "issue_id"
+        ],
+        "title": "UpdateIssueParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "default": "",
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "issue_id": {
+            "title": "Issue Id",
+            "type": "string"
+          },
+          "severity": {
+            "default": "",
+            "title": "Severity",
+            "type": "string"
+          },
+          "risk_id": {
+            "default": "",
+            "title": "Risk Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "issue_id"
+        ],
+        "title": "MetricStreamIssue",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "metricstream-connector.update_issue",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "metricstream"
+    },
+    {
+      "name": "list_controls",
+      "description": "List Controls and their testing status on the connected MetricStream tenant.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved MetricStream tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "title": "ListControlsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "MetricStreamControl": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "control_id": {
+                "title": "Control Id",
+                "type": "string"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "testing_status": {
+                "default": "",
+                "title": "Testing Status",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "control_id",
+              "name"
+            ],
+            "title": "MetricStreamControl",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "controls": {
+            "items": {
+              "$ref": "#/$defs/MetricStreamControl"
+            },
+            "title": "Controls",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "controls"
+        ],
+        "title": "ControlList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "metricstream-connector.list_controls",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "metricstream"
+    },
+    {
+      "name": "get_control",
+      "description": "Read one Control in full by id.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved MetricStream tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "control_id": {
+            "description": "MetricStream Control ID.",
+            "title": "Control Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "control_id"
+        ],
+        "title": "ControlIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "control_id": {
+            "title": "Control Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "testing_status": {
+            "default": "",
+            "title": "Testing Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "control_id",
+          "name"
+        ],
+        "title": "MetricStreamControl",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "metricstream-connector.get_control",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "metricstream"
+    },
+    {
+      "name": "list_assessments",
+      "description": "List compliance/risk Assessments configured on the connected MetricStream tenant.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved MetricStream tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "title": "ListAssessmentsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "MetricStreamAssessment": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "default": "",
+                "title": "Status",
+                "type": "string"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "assessment_id": {
+                "title": "Assessment Id",
+                "type": "string"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "assessment_id",
+              "name"
+            ],
+            "title": "MetricStreamAssessment",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "assessments": {
+            "items": {
+              "$ref": "#/$defs/MetricStreamAssessment"
+            },
+            "title": "Assessments",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "assessments"
+        ],
+        "title": "AssessmentList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "metricstream-connector.list_assessments",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "metricstream"
+    },
+    {
+      "name": "get_assessment",
+      "description": "Read one Assessment in full by id.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved MetricStream tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "assessment_id": {
+            "description": "MetricStream Assessment ID.",
+            "title": "Assessment Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "assessment_id"
+        ],
+        "title": "AssessmentIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "default": "",
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "assessment_id": {
+            "title": "Assessment Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "assessment_id",
+          "name"
+        ],
+        "title": "MetricStreamAssessment",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "metricstream-connector.get_assessment",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "metricstream"
+    },
+    {
+      "name": "audit_risk_posture",
+      "description": "Build a lightweight risk posture overview: open Issues by severity, high-risk Risks, Controls failing testing, and Assessment completion rate.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved MetricStream tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "title": "AuditRiskPostureParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "open_issues_critical": {
+            "title": "Open Issues Critical",
+            "type": "integer"
+          },
+          "open_issues_high": {
+            "title": "Open Issues High",
+            "type": "integer"
+          },
+          "open_issues_other": {
+            "title": "Open Issues Other",
+            "type": "integer"
+          },
+          "high_risk_count": {
+            "title": "High Risk Count",
+            "type": "integer"
+          },
+          "controls_failing": {
+            "title": "Controls Failing",
+            "type": "integer"
+          },
+          "assessment_completion_pct": {
+            "title": "Assessment Completion Pct",
+            "type": "number"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "open_issues_critical",
+          "open_issues_high",
+          "open_issues_other",
+          "high_risk_count",
+          "controls_failing",
+          "assessment_completion_pct",
+          "summary"
+        ],
+        "title": "RiskPostureAudit",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "metricstream-connector.audit_risk_posture",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "metricstream"
+    }
+  ],
+  "signals": [],
+  "schedules": [],
+  "required_scopes": [],
+  "icon_size_bytes": 746,
+  "lifecycle": {
+    "health_check": {
+      "interval_sec": 60
+    }
+  },
+  "secrets": [
+    {
+      "name": "metricstream_connections",
+      "description": "JSON list of connected MetricStream tenants and encrypted API Keys. Managed only through connect_metricstream and disconnect_metricstream.",
+      "required": true,
+      "write_mode": "both",
+      "max_bytes": 65536,
+      "scope": "user",
+      "rotation_hint_days": 90
+    }
+  ],
+  "panels": [
+    {
+      "panel_id": "secrets",
+      "slot": "right",
+      "title": "Secrets",
+      "tree": {},
+      "icon": "KeyRound",
+      "refresh": "manual",
+      "center_overlay": false
+    },
+    {
+      "panel_id": "metricstream_sidebar",
+      "slot": "left",
+      "title": "MetricStream",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": false
+    },
+    {
+      "panel_id": "metricstream_connect_help",
+      "slot": "center",
+      "title": "How do I get this?",
+      "tree": {},
+      "icon": "HelpCircle",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "metricstream_overview",
+      "slot": "center",
+      "title": "Risk posture",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "metricstream_risks",
+      "slot": "center",
+      "title": "Risks",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "metricstream_issues",
+      "slot": "center",
+      "title": "Issues",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "metricstream_controls",
+      "slot": "center",
+      "title": "Controls",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "metricstream_assessments",
+      "slot": "center",
+      "title": "Assessments",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "metricstream_settings",
+      "slot": "center",
+      "title": "MetricStream settings",
+      "tree": {},
+      "icon": "Settings",
+      "refresh": "manual",
+      "center_overlay": true
+    }
+  ]
+}

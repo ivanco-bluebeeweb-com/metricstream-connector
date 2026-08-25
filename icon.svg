@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="MetricStream Connector">
+  <defs>
+    <linearGradient id="bg" x1="14" y1="12" x2="114" y2="118" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0F6E5C"/>
+      <stop offset="1" stop-color="#093F35"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="112" height="112" rx="24" fill="url(#bg)"/>
+  <path d="M32 84V52l16 20 16-28 16 40" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="32" cy="52" r="4" fill="#ffffff"/>
+  <circle cx="48" cy="72" r="4" fill="#ffffff"/>
+  <circle cx="64" cy="44" r="4" fill="#ffffff"/>
+  <circle cx="80" cy="84" r="4" fill="#ffffff"/>
+</svg>
