@@ -1,0 +1,16 @@
+{
+  "audit_risk_posture": 40,
+  "connect_metricstream": 0,
+  "create_issue": 16,
+  "disconnect_metricstream": 0,
+  "get_assessment": 8,
+  "get_control": 8,
+  "get_issue": 8,
+  "get_risk": 8,
+  "list_assessments": 8,
+  "list_connections": 0,
+  "list_controls": 8,
+  "list_issues": 8,
+  "list_risks": 8,
+  "update_issue": 16
+}
