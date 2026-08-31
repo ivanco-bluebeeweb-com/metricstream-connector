@@ -90,7 +90,7 @@ async def connect_metricstream(ctx, params: ConnectMetricStreamParams) -> Action
     }
     connections.append(record)
     await _save_connections(ctx, connections)
-    return ActionResult.success(data=_connection_entity(record))
+    return ActionResult.success(data=_connection_entity(record), summary="Metricstream connected.")
 
 
 @chat.function("disconnect_metricstream", "Disconnect a MetricStream tenant: deletes only the saved credentials. Nothing in MetricStream itself is changed.", action_type="write", chain_callable=True, data_model=DeleteResult, event="metricstream-connector.disconnect_metricstream", effects=["metricstream.provider.disconnected"])
@@ -101,14 +101,14 @@ async def disconnect_metricstream(ctx, params: DisconnectMetricStreamParams) -> 
     if len(remaining) == len(connections):
         return ActionResult.error(f"No connection found with id '{params.connection_id}'.")
     await _save_connections(ctx, remaining)
-    return ActionResult.success(data=DeleteResult(deleted=True, connection_id=params.connection_id))
+    return ActionResult.success(data=DeleteResult(deleted=True, connection_id=params.connection_id), summary="Metricstream disconnected.")
 
 
 @chat.function("list_connections", "List the connected MetricStream tenants.", action_type="read", chain_callable=True, data_model=ConnectionList, event="metricstream-connector.list_connections")
 async def list_connections(ctx, params: NoParams) -> ActionResult:
     """List the connected MetricStream tenants."""
     connections = await _load_connections(ctx)
-    return ActionResult.success(data=ConnectionList(connections=[_connection_entity(c) for c in connections]))
+    return ActionResult.success(data=ConnectionList(connections=[_connection_entity(c) for c in connections]), summary="Connections listed.")
 
 
 # ---- Risks ----
@@ -131,7 +131,7 @@ async def list_risks(ctx, params: ListRisksParams) -> ActionResult:
     except ms.MetricStreamError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
     items = _unwrap(data)
-    return ActionResult.success(data=RiskList(risks=[_risk_entity(r) for r in items]))
+    return ActionResult.success(data=RiskList(risks=[_risk_entity(r) for r in items]), summary="Risks listed.")
 
 
 @chat.function("get_risk", "Read one Risk in full by id.", action_type="read", chain_callable=True, data_model=MetricStreamRisk, event="metricstream-connector.get_risk")
@@ -143,7 +143,7 @@ async def get_risk(ctx, params: RiskIdParams) -> ActionResult:
         data, _ = await client.request("GET", f"/api/v1/risks/{params.risk_id}")
     except ms.MetricStreamError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=_risk_entity(data if isinstance(data, dict) else {}))
+    return ActionResult.success(data=_risk_entity(data if isinstance(data, dict) else {}), summary="Risk retrieved.")
 
 
 # ---- Issues ----
@@ -169,7 +169,7 @@ async def list_issues(ctx, params: ListIssuesParams) -> ActionResult:
     except ms.MetricStreamError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
     items = _unwrap(data)
-    return ActionResult.success(data=IssueList(issues=[_issue_entity(i) for i in items]))
+    return ActionResult.success(data=IssueList(issues=[_issue_entity(i) for i in items]), summary="Issues listed.")
 
 
 @chat.function("get_issue", "Read one Issue in full by id.", action_type="read", chain_callable=True, data_model=MetricStreamIssue, event="metricstream-connector.get_issue")
@@ -181,7 +181,7 @@ async def get_issue(ctx, params: IssueIdParams) -> ActionResult:
         data, _ = await client.request("GET", f"/api/v1/issues/{params.issue_id}")
     except ms.MetricStreamError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=_issue_entity(data if isinstance(data, dict) else {}))
+    return ActionResult.success(data=_issue_entity(data if isinstance(data, dict) else {}), summary="Issue retrieved.")
 
 
 @chat.function("create_issue", "Create a new Issue, optionally linked to a Risk.", action_type="write", chain_callable=True, data_model=MetricStreamIssue, event="metricstream-connector.create_issue", effects=["metricstream.issue.created"])
@@ -198,7 +198,7 @@ async def create_issue(ctx, params: CreateIssueParams) -> ActionResult:
         data, _ = await client.request("POST", "/api/v1/issues", json_body=body)
     except ms.MetricStreamError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=_issue_entity(data if isinstance(data, dict) else {}))
+    return ActionResult.success(data=_issue_entity(data if isinstance(data, dict) else {}), summary="Issue created.")
 
 
 @chat.function("update_issue", "Update selected fields of an existing Issue (status and/or severity). Only given fields change.", action_type="write", chain_callable=True, data_model=MetricStreamIssue, event="metricstream-connector.update_issue", effects=["metricstream.issue.updated"])
@@ -215,7 +215,7 @@ async def update_issue(ctx, params: UpdateIssueParams) -> ActionResult:
         data, _ = await client.request("PATCH", f"/api/v1/issues/{params.issue_id}", json_body=body)
     except ms.MetricStreamError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=_issue_entity(data if isinstance(data, dict) else {}))
+    return ActionResult.success(data=_issue_entity(data if isinstance(data, dict) else {}), summary="Issue updated.")
 
 
 # ---- Controls ----
@@ -238,7 +238,7 @@ async def list_controls(ctx, params: ListControlsParams) -> ActionResult:
     except ms.MetricStreamError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
     items = _unwrap(data)
-    return ActionResult.success(data=ControlList(controls=[_control_entity(x) for x in items]))
+    return ActionResult.success(data=ControlList(controls=[_control_entity(x) for x in items]), summary="Controls listed.")
 
 
 @chat.function("get_control", "Read one Control in full by id.", action_type="read", chain_callable=True, data_model=MetricStreamControl, event="metricstream-connector.get_control")
@@ -250,7 +250,7 @@ async def get_control(ctx, params: ControlIdParams) -> ActionResult:
         data, _ = await client.request("GET", f"/api/v1/controls/{params.control_id}")
     except ms.MetricStreamError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=_control_entity(data if isinstance(data, dict) else {}))
+    return ActionResult.success(data=_control_entity(data if isinstance(data, dict) else {}), summary="Control retrieved.")
 
 
 # ---- Assessments ----
@@ -273,7 +273,7 @@ async def list_assessments(ctx, params: ListAssessmentsParams) -> ActionResult:
     except ms.MetricStreamError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
     items = _unwrap(data)
-    return ActionResult.success(data=AssessmentList(assessments=[_assessment_entity(a) for a in items]))
+    return ActionResult.success(data=AssessmentList(assessments=[_assessment_entity(a) for a in items]), summary="Assessments listed.")
 
 
 @chat.function("get_assessment", "Read one Assessment in full by id.", action_type="read", chain_callable=True, data_model=MetricStreamAssessment, event="metricstream-connector.get_assessment")
@@ -285,7 +285,7 @@ async def get_assessment(ctx, params: AssessmentIdParams) -> ActionResult:
         data, _ = await client.request("GET", f"/api/v1/assessments/{params.assessment_id}")
     except ms.MetricStreamError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=_assessment_entity(data if isinstance(data, dict) else {}))
+    return ActionResult.success(data=_assessment_entity(data if isinstance(data, dict) else {}), summary="Assessment retrieved.")
 
 
 # ---- Aggregated report ----
@@ -344,4 +344,4 @@ async def audit_risk_posture(ctx, params: AuditRiskPostureParams) -> ActionResul
         controls_failing=failing_controls,
         assessment_completion_pct=completion_pct,
         summary=summary,
-    ))
+    ), summary="Risk posture audit ready.")
