@@ -75,26 +75,35 @@ class AuditRiskPostureParams(ConnectionRefParams):
 # ---- SDL entities ----
 
 class MetricStreamConnection(sdl.Entity):
+    id: str = ""
+    title: str = ""
     connection_id: str
     label: str
     base_url: str
 
 
 class ConnectionList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     connections: list[MetricStreamConnection]
 
 
 class MetricStreamRisk(sdl.Entity):
+    id: str = ""
+    title: str = ""
     risk_id: str
     name: str
     risk_level: str = ""
 
 
 class RiskList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     risks: list[MetricStreamRisk]
 
 
 class MetricStreamIssue(sdl.Entity):
+    id: str = ""
     issue_id: str
     title: str
     status: str = ""
@@ -103,30 +112,42 @@ class MetricStreamIssue(sdl.Entity):
 
 
 class IssueList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     issues: list[MetricStreamIssue]
 
 
 class MetricStreamControl(sdl.Entity):
+    id: str = ""
+    title: str = ""
     control_id: str
     name: str
     testing_status: str = ""
 
 
 class ControlList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     controls: list[MetricStreamControl]
 
 
 class MetricStreamAssessment(sdl.Entity):
+    id: str = ""
+    title: str = ""
     assessment_id: str
     name: str
     status: str = ""
 
 
 class AssessmentList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     assessments: list[MetricStreamAssessment]
 
 
 class RiskPostureAudit(sdl.Entity):
+    id: str = ""
+    title: str = ""
     open_issues_critical: int
     open_issues_high: int
     open_issues_other: int
@@ -137,5 +158,7 @@ class RiskPostureAudit(sdl.Entity):
 
 
 class DeleteResult(sdl.Entity):
+    id: str = ""
+    title: str = ""
     deleted: bool
     connection_id: str
