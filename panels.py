@@ -23,8 +23,7 @@ def _field(label: str, node: ui.UINode) -> ui.UINode:
 
 def _settings_button() -> ui.UINode:
     return ui.Button(
-        "App settings", variant="secondary", size="sm", full_width=True,
-        icon="Settings", on_click=ui.Call("__panel__metricstream_settings"),
+        "App settings", variant="secondary", size="sm", icon="Settings", on_click=ui.Call("__panel__metricstream_settings"),
     )
 
 
@@ -35,6 +34,9 @@ async def metricstream_sidebar(ctx, **kwargs) -> ui.UINode:
         return ui.Stack(direction="v", gap=3, align="stretch", children=[
             ui.Button("How do I get this?", variant="ghost", size="sm", icon="HelpCircle",
                       on_click=ui.Call("__panel__metricstream_connect_help")),
+            ui.Button("Sign in with MetricStream (SSO / OAuth)", variant="primary", size="sm", icon="login"),
+            ui.Divider(),
+            ui.Text("Or connect via API Key", variant="caption"),
             ui.Form(action="connect_metricstream", submit_label="Connect", children=[
                 _field("Account label", ui.Input(param_name="label", placeholder="Acme Corp — Risk & Compliance")),
                 _field("Instance URL", ui.Input(param_name="base_url", placeholder="https://your-instance.metricstream.com")),
@@ -45,15 +47,15 @@ async def metricstream_sidebar(ctx, **kwargs) -> ui.UINode:
     return ui.Stack(direction="v", gap=3, align="stretch", children=[
         ui.Text(label, variant="body"),
         ui.Divider(),
-        ui.Button("Risk posture", variant="ghost", size="sm", full_width=True, icon="ShieldCheck",
+        ui.Button("Risk posture", variant="ghost", size="sm", icon="ShieldCheck",
                   on_click=ui.Call("__panel__metricstream_overview")),
-        ui.Button("Risks", variant="ghost", size="sm", full_width=True, icon="AlertTriangle",
+        ui.Button("Risks", variant="ghost", size="sm", icon="AlertTriangle",
                   on_click=ui.Call("__panel__metricstream_risks")),
-        ui.Button("Issues", variant="ghost", size="sm", full_width=True, icon="Flag",
+        ui.Button("Issues", variant="ghost", size="sm", icon="Flag",
                   on_click=ui.Call("__panel__metricstream_issues")),
-        ui.Button("Controls", variant="ghost", size="sm", full_width=True, icon="CheckSquare",
+        ui.Button("Controls", variant="ghost", size="sm", icon="CheckSquare",
                   on_click=ui.Call("__panel__metricstream_controls")),
-        ui.Button("Assessments", variant="ghost", size="sm", full_width=True, icon="ClipboardCheck",
+        ui.Button("Assessments", variant="ghost", size="sm", icon="ClipboardCheck",
                   on_click=ui.Call("__panel__metricstream_assessments")),
         ui.Divider(),
         _settings_button(),
