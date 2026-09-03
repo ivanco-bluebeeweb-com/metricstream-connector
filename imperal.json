@@ -2291,5 +2291,32 @@
       "refresh": "manual",
       "center_overlay": true
     }
-  ]
+  ],
+  "pricing": {
+    "model": "per_action",
+    "currency": "credits",
+    "monthly_price": 0,
+    "free_tools": [
+      "connect_metricstream",
+      "disconnect_metricstream",
+      "list_connections"
+    ],
+    "tool_prices": {
+      "connect_metricstream": 0,
+      "disconnect_metricstream": 0,
+      "list_connections": 0,
+      "list_risks": 8,
+      "get_risk": 8,
+      "list_issues": 8,
+      "get_issue": 8,
+      "create_issue": 16,
+      "update_issue": 16,
+      "list_controls": 8,
+      "get_control": 8,
+      "list_assessments": 8,
+      "get_assessment": 8,
+      "audit_risk_posture": 20
+    },
+    "notes": "Standard platform scale {0, 8, 16, 20, 40}. 0 = access setup and harmless discovery. 8 = read/list/search. 16 = standard single mutation/CRUD. 20 = bulk or heavy audit operation."
+  }
 }
